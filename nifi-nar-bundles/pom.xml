@@ -35,7 +35,6 @@
         <module>nifi-standard-services</module>
         <module>nifi-update-attribute-bundle</module>
         <module>nifi-kafka-bundle</module>
-        <module>nifi-kudu-bundle</module>
         <module>nifi-solr-bundle</module>
         <module>nifi-confluent-platform-bundle</module>
         <module>nifi-aws-bundle</module>
@@ -60,13 +59,13 @@
         <module>nifi-scripting-bundle</module>
         <module>nifi-elasticsearch-bundle</module>
         <module>nifi-amqp-bundle</module>
-	<module>nifi-splunk-bundle</module>
+        <module>nifi-splunk-bundle</module>
         <module>nifi-jms-bundle</module>
         <module>nifi-beats-bundle</module>
         <module>nifi-cassandra-bundle</module>
         <module>nifi-spring-bundle</module>
         <module>nifi-hive-bundle</module>
-	<module>nifi-site-to-site-reporting-bundle</module>
+        <module>nifi-site-to-site-reporting-bundle</module>
         <module>nifi-mqtt-bundle</module>
         <module>nifi-evtx-bundle</module>
         <module>nifi-slack-bundle</module>
@@ -112,6 +111,8 @@
         <module>nifi-salesforce-bundle</module>
     </modules>
 
+
+
     <build>
         <plugins>
             <!-- Makes buildRevision and buildBranch available to the NAR Plugin so they can be populated in the MANIFEST -->
@@ -141,6 +142,17 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>not-arm</id>
+            <activation>
+                <property>
+                    <name>!arm</name>
+                </property>
+            </activation>
+            <modules>
+                <module>nifi-kudu-bundle</module>
+            </modules>
+        </profile>
         <!-- Specifies an empty buildRevision and buildBranch when building outside of a git repo -->
         <profile>
             <id>build-info-no-git</id>

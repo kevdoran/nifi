@@ -331,12 +331,6 @@ language governing permissions and limitations under the License. -->
         </dependency>
         <dependency>
             <groupId>org.apache.nifi</groupId>
-            <artifactId>nifi-kudu-nar</artifactId>
-            <version>1.17.0-SNAPSHOT</version>
-            <type>nar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.nifi</groupId>
             <artifactId>nifi-ldap-iaa-providers-nar</artifactId>
             <version>1.17.0-SNAPSHOT</version>
             <type>nar</type>
@@ -365,7 +359,7 @@ language governing permissions and limitations under the License. -->
             <version>1.17.0-SNAPSHOT</version>
             <type>nar</type>
         </dependency>
-	<dependency>
+        <dependency>
             <groupId>org.apache.nifi</groupId>
             <artifactId>nifi-mongodb-client-service-api-nar</artifactId>
             <version>1.17.0-SNAPSHOT</version>
@@ -1075,7 +1069,7 @@ language governing permissions and limitations under the License. -->
                 </dependency>
             </dependencies>
         </profile>
-	<profile>
+        <profile>
             <id>include-accumulo</id>
             <!-- This profile handles the inclusion of nifi-accumulo artifacts. -->
             <activation>
@@ -1394,6 +1388,23 @@ language governing permissions and limitations under the License. -->
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>not-arm</id>
+            <activation>
+                <property>
+                    <name>!arm</name>
+                </property>
+            </activation>
+            <dependencies>
+                <!-- Only include non-arm compatible NARs when _not_ building on arm -->
+                <dependency>
+                    <groupId>org.apache.nifi</groupId>
+                    <artifactId>nifi-kudu-nar</artifactId>
+                    <version>1.17.0-SNAPSHOT</version>
+                    <type>nar</type>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
 </project>
