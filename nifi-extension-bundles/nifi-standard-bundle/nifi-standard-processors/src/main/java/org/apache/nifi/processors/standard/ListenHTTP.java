@@ -33,6 +33,8 @@ import org.apache.nifi.annotation.lifecycle.OnStopped;
 import org.apache.nifi.annotation.notification.OnPrimaryNodeStateChange;
 import org.apache.nifi.annotation.notification.PrimaryNodeState;
 import org.apache.nifi.components.AllowableValue;
+import org.apache.nifi.components.ListenPortDefinition.ApplicationProtocol;
+import org.apache.nifi.components.ListenPortDefinition.TransportProtocol;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.components.PropertyValue;
 import org.apache.nifi.components.ValidationContext;
@@ -183,6 +185,7 @@ public class ListenHTTP extends AbstractSessionFactoryProcessor {
         .name("Listening Port")
         .description("The Port to listen on for incoming connections")
         .required(true)
+        .identifiesListenPort(TransportProtocol.TCP, ApplicationProtocol.HTTP_1_1, ApplicationProtocol.H2)
         .expressionLanguageSupported(ExpressionLanguageScope.ENVIRONMENT)
         .addValidator(StandardValidators.PORT_VALIDATOR)
         .build();

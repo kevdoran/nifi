@@ -39,6 +39,8 @@ import org.apache.nifi.annotation.lifecycle.OnUnscheduled;
 import org.apache.nifi.annotation.notification.OnPrimaryNodeStateChange;
 import org.apache.nifi.annotation.notification.PrimaryNodeState;
 import org.apache.nifi.components.AllowableValue;
+import org.apache.nifi.components.ListenPortDefinition.ApplicationProtocol;
+import org.apache.nifi.components.ListenPortDefinition.TransportProtocol;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.expression.ExpressionLanguageScope;
 import org.apache.nifi.flowfile.FlowFile;
@@ -169,6 +171,7 @@ public class HandleHttpRequest extends AbstractProcessor {
             .description("The Port to listen on for incoming HTTP requests")
             .required(true)
             .addValidator(StandardValidators.PORT_VALIDATOR)
+            .identifiesListenPort(TransportProtocol.TCP, ApplicationProtocol.HTTP_1_1, ApplicationProtocol.H2)
             .expressionLanguageSupported(ExpressionLanguageScope.ENVIRONMENT)
             .defaultValue("80")
             .build();

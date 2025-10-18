@@ -22,6 +22,8 @@ import org.apache.nifi.annotation.lifecycle.OnDisabled;
 import org.apache.nifi.annotation.lifecycle.OnEnabled;
 import org.apache.nifi.annotation.lifecycle.OnShutdown;
 import org.apache.nifi.components.AllowableValue;
+import org.apache.nifi.components.ListenPortDefinition.ApplicationProtocol;
+import org.apache.nifi.components.ListenPortDefinition.TransportProtocol;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.components.ValidationContext;
 import org.apache.nifi.components.ValidationResult;
@@ -60,7 +62,6 @@ import org.eclipse.jetty.util.resource.PathResourceFactory;
 import org.eclipse.jetty.util.resource.Resource;
 
 import javax.net.ssl.SSLContext;
-
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.file.Path;
@@ -112,6 +113,7 @@ public class JettyWebSocketServer extends AbstractJettyWebSocketService implemen
             .name("Port")
             .description("The port number on which this WebSocketServer listens to.")
             .required(true)
+            .identifiesListenPort(TransportProtocol.TCP, ApplicationProtocol.WEBSOCKET)
             .expressionLanguageSupported(ExpressionLanguageScope.ENVIRONMENT)
             .addValidator(StandardValidators.PORT_VALIDATOR)
             .build();

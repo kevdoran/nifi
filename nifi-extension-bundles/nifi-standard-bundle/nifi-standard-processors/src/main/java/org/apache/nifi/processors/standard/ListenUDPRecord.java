@@ -25,6 +25,7 @@ import org.apache.nifi.annotation.behavior.WritesAttributes;
 import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.Tags;
 import org.apache.nifi.annotation.lifecycle.OnScheduled;
+import org.apache.nifi.components.ListenPortDefinition;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.components.ValidationContext;
 import org.apache.nifi.components.ValidationResult;
@@ -84,6 +85,15 @@ import java.util.concurrent.TimeUnit;
 })
 public class ListenUDPRecord extends AbstractListenEventProcessor<StandardEvent> {
 
+    public static final PropertyDescriptor PORT = new PropertyDescriptor.Builder()
+        .name("Port")
+        .description("The port to listen on for UDP communication.")
+        .required(true)
+        .identifiesListenPort(ListenPortDefinition.TransportProtocol.UDP)
+        .expressionLanguageSupported(ExpressionLanguageScope.ENVIRONMENT)
+        .addValidator(StandardValidators.PORT_VALIDATOR)
+        .build();
+
     public static final PropertyDescriptor SENDING_HOST = new PropertyDescriptor.Builder()
             .name("sending-host")
             .displayName("Sending Host")
@@ -142,12 +152,13 @@ public class ListenUDPRecord extends AbstractListenEventProcessor<StandardEvent>
             .build();
 
     private static final List<PropertyDescriptor> ADDITIONAL_PROPERTIES = List.of(
-            POLL_TIMEOUT,
-            BATCH_SIZE,
-            RECORD_READER,
-            RECORD_WRITER,
-            SENDING_HOST,
-            SENDING_HOST_PORT
+        PORT,
+        POLL_TIMEOUT,
+        BATCH_SIZE,
+        RECORD_READER,
+        RECORD_WRITER,
+        SENDING_HOST,
+        SENDING_HOST_PORT
     );
 
     public static final Relationship REL_PARSE_FAILURE = new Relationship.Builder()
@@ -172,6 +183,11 @@ public class ListenUDPRecord extends AbstractListenEventProcessor<StandardEvent>
     @Override
     protected List<Relationship> getAdditionalRelationships() {
         return ADDITIONAL_RELATIONSHIPS;
+    }
+
+    @Override
+    protected int getConfiguredPort(ProcessContext context) {
+        return context.getProperty(PORT).evaluateAttributeExpressions().asInteger();
     }
 
     @Override

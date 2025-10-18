@@ -16,18 +16,19 @@
  */
 package org.apache.nifi.distributed.cache.server;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.nifi.annotation.lifecycle.OnDisabled;
 import org.apache.nifi.annotation.lifecycle.OnEnabled;
 import org.apache.nifi.annotation.lifecycle.OnShutdown;
+import org.apache.nifi.components.ListenPortDefinition;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.controller.AbstractControllerService;
 import org.apache.nifi.controller.ConfigurationContext;
 import org.apache.nifi.processor.util.StandardValidators;
 import org.apache.nifi.ssl.SSLContextProvider;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractCacheServer extends AbstractControllerService {
 
@@ -41,6 +42,7 @@ public abstract class AbstractCacheServer extends AbstractControllerService {
         .required(true)
         .addValidator(StandardValidators.PORT_VALIDATOR)
         .defaultValue("4557")
+        .identifiesListenPort(ListenPortDefinition.TransportProtocol.TCP, "nifi.apache.org/cache")
         .build();
     public static final PropertyDescriptor SSL_CONTEXT_SERVICE = new PropertyDescriptor.Builder()
         .name("SSL Context Service")

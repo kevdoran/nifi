@@ -24,6 +24,7 @@ import org.apache.nifi.annotation.documentation.SeeAlso;
 import org.apache.nifi.annotation.documentation.Tags;
 import org.apache.nifi.annotation.lifecycle.OnScheduled;
 import org.apache.nifi.annotation.lifecycle.OnStopped;
+import org.apache.nifi.components.AllowableValue;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.components.PropertyValue;
 import org.apache.nifi.components.ValidationContext;
@@ -34,6 +35,7 @@ import org.apache.nifi.event.transport.configuration.TransportProtocol;
 import org.apache.nifi.event.transport.netty.StringNettyEventSenderFactory;
 import org.apache.nifi.expression.ExpressionLanguageScope;
 import org.apache.nifi.flowfile.FlowFile;
+import org.apache.nifi.processor.AbstractProcessor;
 import org.apache.nifi.processor.ProcessContext;
 import org.apache.nifi.processor.ProcessSession;
 import org.apache.nifi.processor.Relationship;
@@ -64,7 +66,10 @@ import java.util.regex.Pattern;
         "above description, then it is routed to the invalid relationship. Valid messages are sent to the Syslog server and successes are routed to the success relationship, " +
         "failures routed to the failure relationship.")
 @SeeAlso({ListenSyslog.class, ParseSyslog.class})
-public class PutSyslog extends AbstractSyslogProcessor {
+public class PutSyslog extends AbstractProcessor {
+
+    public static final AllowableValue TCP_VALUE = new AllowableValue("TCP", "TCP");
+    public static final AllowableValue UDP_VALUE = new AllowableValue("UDP", "UDP");
 
     public static final PropertyDescriptor HOSTNAME = new PropertyDescriptor.Builder()
             .name("Hostname")
@@ -74,7 +79,28 @@ public class PutSyslog extends AbstractSyslogProcessor {
             .required(true)
             .expressionLanguageSupported(ExpressionLanguageScope.ENVIRONMENT)
             .build();
-
+    public static final PropertyDescriptor PROTOCOL = new PropertyDescriptor
+            .Builder().name("Protocol")
+            .description("The protocol for Syslog communication.")
+            .required(true)
+            .allowableValues(TCP_VALUE, UDP_VALUE)
+            .defaultValue(UDP_VALUE.getValue())
+            .build();
+    public static final PropertyDescriptor PORT = new PropertyDescriptor
+            .Builder().name("Port")
+            .description("The port for Syslog communication. Note that Expression language is not evaluated per FlowFile.")
+            .required(true)
+            .addValidator(StandardValidators.PORT_VALIDATOR)
+            .expressionLanguageSupported(ExpressionLanguageScope.ENVIRONMENT)
+            .build();
+    public static final PropertyDescriptor CHARSET = new PropertyDescriptor.Builder()
+            .name("Character Set")
+            .description("Specifies the character set of the Syslog messages. Note that Expression language is not evaluated per FlowFile.")
+            .required(true)
+            .defaultValue("UTF-8")
+            .addValidator(StandardValidators.CHARACTER_SET_VALIDATOR)
+            .expressionLanguageSupported(ExpressionLanguageScope.ENVIRONMENT)
+            .build();
     public static final PropertyDescriptor MAX_SOCKET_SEND_BUFFER_SIZE = new PropertyDescriptor.Builder()
             .name("Max Size of Socket Send Buffer")
             .description("The maximum size of the socket send buffer that should be used. This is a suggestion to the Operating System " +
@@ -146,6 +172,14 @@ public class PutSyslog extends AbstractSyslogProcessor {
             .required(false)
             .identifiesControllerService(SSLContextProvider.class)
             .dependsOn(PROTOCOL, TCP_VALUE)
+            .build();
+    public static final PropertyDescriptor TIMEOUT = new PropertyDescriptor.Builder()
+            .name("Timeout")
+            .description("The timeout for connecting to and communicating with the syslog server. Does not apply to UDP. Note that Expression language is not evaluated per FlowFile.")
+            .required(false)
+            .defaultValue("10 seconds")
+            .addValidator(StandardValidators.TIME_PERIOD_VALIDATOR)
+            .expressionLanguageSupported(ExpressionLanguageScope.ENVIRONMENT)
             .build();
 
     private static final List<PropertyDescriptor> PROPERTY_DESCRIPTORS = List.of(

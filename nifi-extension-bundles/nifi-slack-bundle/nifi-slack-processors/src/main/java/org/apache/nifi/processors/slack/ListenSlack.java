@@ -88,7 +88,7 @@ import java.util.regex.Pattern;
 })
 @SeeAlso({ConsumeSlack.class})
 @Tags({"slack", "real-time", "event", "message", "command", "listen", "receive", "social media", "team", "text", "unstructured"})
-@CapabilityDescription("Retrieves real-time messages or Slack commands from one or more Slack conversations. The messages are written out in JSON format. " +
+@CapabilityDescription("Creates a two-way connection to Slack for receiving real-time messages or Slack commands from one or more Slack conversations. The messages are written out in JSON format. " +
     "Note that this Processor should be used to obtain real-time messages and commands from Slack and does not provide a mechanism for obtaining historical messages. " +
     "The ConsumeSlack Processor should be used for an initial load of messages from a channel. " +
     "See Usage / Additional Details for more information about how to configure this Processor and enable it to retrieve messages and commands from Slack.")

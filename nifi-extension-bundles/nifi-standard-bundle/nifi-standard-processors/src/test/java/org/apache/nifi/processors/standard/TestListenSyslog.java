@@ -76,8 +76,7 @@ public class TestListenSyslog {
     @Test
     public void testRunTcp() throws Exception {
         final TransportProtocol protocol = TransportProtocol.TCP;
-        runner.setProperty(ListenSyslog.PROTOCOL, protocol.toString());
-        runner.setProperty(ListenSyslog.PORT, "0");
+        runner.setProperty(ListenSyslog.TCP_PORT, "0");
         runner.setProperty(ListenSyslog.SOCKET_KEEP_ALIVE, Boolean.FALSE.toString());
 
         assertSendSuccess(protocol);
@@ -86,8 +85,7 @@ public class TestListenSyslog {
     @Test
     public void testRunTcpBatchParseDisabled() throws Exception {
         final TransportProtocol protocol = TransportProtocol.TCP;
-        runner.setProperty(ListenSyslog.PROTOCOL, protocol.toString());
-        runner.setProperty(ListenSyslog.PORT, "0");
+        runner.setProperty(ListenSyslog.TCP_PORT, "0");
         runner.setProperty(ListenSyslog.SOCKET_KEEP_ALIVE, Boolean.FALSE.toString());
         runner.setProperty(ListenSyslog.PARSE_MESSAGES, Boolean.FALSE.toString());
         runner.setProperty(ListenSyslog.MAX_BATCH_SIZE, "2");
@@ -113,8 +111,7 @@ public class TestListenSyslog {
     @Test
     public void testRunUdp() throws Exception {
         final TransportProtocol protocol = TransportProtocol.UDP;
-        runner.setProperty(ListenSyslog.PROTOCOL, protocol.toString());
-        runner.setProperty(ListenSyslog.PORT, "0");
+        runner.setProperty(ListenSyslog.UDP_PORT, "0");
 
         assertSendSuccess(protocol);
     }
@@ -122,8 +119,7 @@ public class TestListenSyslog {
     @Test
     public void testRunUdpBatch() throws Exception {
         final TransportProtocol protocol = TransportProtocol.UDP;
-        runner.setProperty(ListenSyslog.PROTOCOL, protocol.toString());
-        runner.setProperty(ListenSyslog.PORT, "0");
+        runner.setProperty(ListenSyslog.UDP_PORT, "0");
 
         final String[] messages = new String[]{VALID_MESSAGE, VALID_MESSAGE};
 
@@ -148,8 +144,7 @@ public class TestListenSyslog {
     @Test
     public void testRunUdpInvalid() throws Exception {
         final TransportProtocol protocol = TransportProtocol.UDP;
-        runner.setProperty(ListenSyslog.PROTOCOL, protocol.toString());
-        runner.setProperty(ListenSyslog.PORT, "0");
+        runner.setProperty(ListenSyslog.UDP_PORT, "0");
 
         runner.run(1, STOP_ON_FINISH_DISABLED);
         final int listeningPort = ((ListenSyslog) runner.getProcessor()).getListeningPort();

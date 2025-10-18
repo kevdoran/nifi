@@ -25,22 +25,24 @@ import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.Tags;
 import org.apache.nifi.annotation.lifecycle.OnScheduled;
 import org.apache.nifi.annotation.lifecycle.OnStopped;
+import org.apache.nifi.components.ListenPortDefinition.ApplicationProtocol;
+import org.apache.nifi.components.ListenPortDefinition.TransportProtocol;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.event.transport.EventServer;
 import org.apache.nifi.event.transport.EventServerFactory;
 import org.apache.nifi.event.transport.netty.NettyEventServerFactory;
 import org.apache.nifi.expression.ExpressionLanguageScope;
 import org.apache.nifi.flowfile.FlowFile;
-import org.apache.nifi.processors.opentelemetry.protocol.TelemetryAttributeName;
-import org.apache.nifi.processors.opentelemetry.io.RequestCallback;
-import org.apache.nifi.processors.opentelemetry.io.RequestCallbackProvider;
-import org.apache.nifi.processors.opentelemetry.server.HttpServerFactory;
 import org.apache.nifi.processor.AbstractProcessor;
 import org.apache.nifi.processor.ProcessContext;
 import org.apache.nifi.processor.ProcessSession;
 import org.apache.nifi.processor.Relationship;
 import org.apache.nifi.processor.exception.ProcessException;
 import org.apache.nifi.processor.util.StandardValidators;
+import org.apache.nifi.processors.opentelemetry.io.RequestCallback;
+import org.apache.nifi.processors.opentelemetry.io.RequestCallbackProvider;
+import org.apache.nifi.processors.opentelemetry.protocol.TelemetryAttributeName;
+import org.apache.nifi.processors.opentelemetry.server.HttpServerFactory;
 import org.apache.nifi.security.util.ClientAuth;
 import org.apache.nifi.ssl.SSLContextProvider;
 
@@ -85,6 +87,7 @@ public class ListenOTLP extends AbstractProcessor {
             .description("TCP port number on which to listen for OTLP Export Service Requests over HTTP and gRPC")
             .required(true)
             .defaultValue("4317")
+            .identifiesListenPort(TransportProtocol.TCP, ApplicationProtocol.HTTP_1_1, ApplicationProtocol.H2, "grpc", "otlp")
             .addValidator(StandardValidators.PORT_VALIDATOR)
             .expressionLanguageSupported(ExpressionLanguageScope.NONE)
             .build();

@@ -45,7 +45,6 @@ public abstract class AbstractListenEventBatchingProcessor<E extends Event> exte
 
     private static final List<PropertyDescriptor> PROPERTY_DESCRIPTORS = List.of(
             NETWORK_INTF_NAME,
-            PORT,
             RECV_BUFFER_SIZE,
             MAX_MESSAGE_QUEUE_SIZE,
             MAX_SOCKET_BUFFER_SIZE,

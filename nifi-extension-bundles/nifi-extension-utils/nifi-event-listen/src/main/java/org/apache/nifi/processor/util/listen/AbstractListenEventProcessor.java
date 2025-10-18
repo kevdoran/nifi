@@ -19,7 +19,6 @@ package org.apache.nifi.processor.util.listen;
 import org.apache.nifi.annotation.lifecycle.OnScheduled;
 import org.apache.nifi.annotation.lifecycle.OnStopped;
 import org.apache.nifi.components.PropertyDescriptor;
-import org.apache.nifi.expression.ExpressionLanguageScope;
 import org.apache.nifi.processor.AbstractProcessor;
 import org.apache.nifi.processor.DataUnit;
 import org.apache.nifi.processor.ProcessContext;
@@ -58,13 +57,6 @@ import static org.apache.nifi.processor.util.listen.ListenerProperties.NETWORK_I
  */
 public abstract class AbstractListenEventProcessor<E extends Event> extends AbstractProcessor {
 
-    public static final PropertyDescriptor PORT = new PropertyDescriptor
-            .Builder().name("Port")
-            .description("The port to listen on for communication.")
-            .required(true)
-            .expressionLanguageSupported(ExpressionLanguageScope.ENVIRONMENT)
-            .addValidator(StandardValidators.PORT_VALIDATOR)
-            .build();
     public static final PropertyDescriptor CHARSET = new PropertyDescriptor.Builder()
             .name("Character Set")
             .description("Specifies the character set of the received data.")
@@ -111,7 +103,6 @@ public abstract class AbstractListenEventProcessor<E extends Event> extends Abst
 
     private static final List<PropertyDescriptor> PROPERTY_DESCRIPTORS = List.of(
         NETWORK_INTF_NAME,
-        PORT,
         RECV_BUFFER_SIZE,
         MAX_MESSAGE_QUEUE_SIZE,
         MAX_SOCKET_BUFFER_SIZE,
@@ -162,6 +153,13 @@ public abstract class AbstractListenEventProcessor<E extends Event> extends Abst
         return Collections.emptyList();
     }
 
+    /**
+     * Processors that extend this abstract class must implement this method to provide the user-configured port number to this base class.
+     *
+     * @return the port to listen on for communication.
+     */
+    protected abstract int getConfiguredPort(final ProcessContext context);
+
     @Override
     public final Set<Relationship> getRelationships() {
         return this.relationships;
@@ -175,7 +173,7 @@ public abstract class AbstractListenEventProcessor<E extends Event> extends Abst
     @OnScheduled
     public void onScheduled(final ProcessContext context) throws IOException {
         charset = Charset.forName(context.getProperty(CHARSET).getValue());
-        final int specifiedPort = context.getProperty(PORT).evaluateAttributeExpressions().asInteger();
+        final int specifiedPort = getConfiguredPort(context);
         eventsCapacity = context.getProperty(MAX_MESSAGE_QUEUE_SIZE).asInteger();
         events = new TrackingLinkedBlockingQueue<>(eventsCapacity);
         final String interfaceName = context.getProperty(NETWORK_INTF_NAME).evaluateAttributeExpressions().getValue();

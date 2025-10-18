@@ -24,6 +24,7 @@ import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.Tags;
 import org.apache.nifi.annotation.lifecycle.OnScheduled;
 import org.apache.nifi.annotation.lifecycle.OnStopped;
+import org.apache.nifi.components.ListenPortDefinition;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.components.ValidationContext;
 import org.apache.nifi.components.ValidationResult;
@@ -89,6 +90,7 @@ public class ListenFTP extends AbstractSessionFactoryProcessor {
             .description("The Port to listen on for incoming connections. On Linux, root privileges are required to use port numbers below 1024.")
             .required(true)
             .defaultValue("2221")
+            .identifiesListenPort(ListenPortDefinition.TransportProtocol.TCP, ListenPortDefinition.ApplicationProtocol.FTP)
             .expressionLanguageSupported(ExpressionLanguageScope.ENVIRONMENT)
             .addValidator(StandardValidators.PORT_VALIDATOR)
             .build();

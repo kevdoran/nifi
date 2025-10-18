@@ -48,6 +48,7 @@ public class RequireServerSSLContextService extends AbstractFlowAnalysisRule {
             "org.apache.nifi.processors.standard.ListenTCP",
             "org.apache.nifi.processors.standard.ListenSyslog",
             "org.apache.nifi.processors.standard.HandleHttpRequest",
+            "org.apache.nifi.processors.opentelemetry.ListenOTLP",
             "org.apache.nifi.websocket.jetty.JettyWebSocketServer"
     );
 

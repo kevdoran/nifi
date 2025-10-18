@@ -24,6 +24,7 @@ import org.apache.nifi.annotation.documentation.Tags;
 import org.apache.nifi.annotation.lifecycle.OnScheduled;
 import org.apache.nifi.annotation.lifecycle.OnStopped;
 import org.apache.nifi.components.ConfigVerificationResult;
+import org.apache.nifi.components.ListenPortDefinition.TransportProtocol;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.components.resource.ResourceCardinality;
 import org.apache.nifi.components.resource.ResourceType;
@@ -76,6 +77,7 @@ public class ListenTrapSNMP extends AbstractSessionFactoryProcessor implements V
             .displayName("SNMP Manager Port")
             .description("The port where the SNMP Manager listens to the incoming traps.")
             .required(true)
+            .identifiesListenPort(TransportProtocol.UDP, "snmptrap")
             .addValidator(StandardValidators.PORT_VALIDATOR)
             .build();
 

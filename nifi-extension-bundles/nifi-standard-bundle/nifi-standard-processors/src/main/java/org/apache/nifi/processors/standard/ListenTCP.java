@@ -24,6 +24,7 @@ import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.Tags;
 import org.apache.nifi.annotation.lifecycle.OnScheduled;
 import org.apache.nifi.annotation.lifecycle.OnStopped;
+import org.apache.nifi.components.ListenPortDefinition;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.event.transport.EventException;
 import org.apache.nifi.event.transport.EventServer;
@@ -33,6 +34,7 @@ import org.apache.nifi.event.transport.configuration.TransportProtocol;
 import org.apache.nifi.event.transport.message.ByteArrayMessage;
 import org.apache.nifi.event.transport.netty.ByteArrayMessageNettyEventServerFactory;
 import org.apache.nifi.event.transport.netty.NettyEventServerFactory;
+import org.apache.nifi.expression.ExpressionLanguageScope;
 import org.apache.nifi.flowfile.FlowFile;
 import org.apache.nifi.migration.PropertyConfiguration;
 import org.apache.nifi.processor.AbstractProcessor;
@@ -91,6 +93,15 @@ public class ListenTCP extends AbstractProcessor {
     private static final String CLIENT_CERTIFICATE_SUBJECT_DN_ATTRIBUTE = "client.certificate.subject.dn";
     private static final String CLIENT_CERTIFICATE_ISSUER_DN_ATTRIBUTE = "client.certificate.issuer.dn";
 
+    public static final PropertyDescriptor PORT = new PropertyDescriptor
+        .Builder().name("Port")
+        .description("The port to listen on for tcp communication.")
+        .required(true)
+        .identifiesListenPort(ListenPortDefinition.TransportProtocol.TCP)
+        .expressionLanguageSupported(ExpressionLanguageScope.ENVIRONMENT)
+        .addValidator(StandardValidators.PORT_VALIDATOR)
+        .build();
+
     public static final PropertyDescriptor SSL_CONTEXT_SERVICE = new PropertyDescriptor.Builder()
             .name("SSL Context Service")
             .description("The Controller Service to use in order to obtain an SSL Context. If this property is set, " +
@@ -129,7 +140,7 @@ public class ListenTCP extends AbstractProcessor {
 
     private static final List<PropertyDescriptor> PROPERTY_DESCRIPTORS = List.of(
             ListenerProperties.NETWORK_INTF_NAME,
-            ListenerProperties.PORT,
+            PORT,
             ListenerProperties.RECV_BUFFER_SIZE,
             ListenerProperties.MAX_MESSAGE_QUEUE_SIZE,
             ListenerProperties.MAX_SOCKET_BUFFER_SIZE,
@@ -179,7 +190,7 @@ public class ListenTCP extends AbstractProcessor {
         final String networkInterface = context.getProperty(ListenerProperties.NETWORK_INTF_NAME).evaluateAttributeExpressions().getValue();
         final InetAddress address = NetworkUtils.getInterfaceAddress(networkInterface);
         final Charset charset = Charset.forName(context.getProperty(ListenerProperties.CHARSET).getValue());
-        port = context.getProperty(ListenerProperties.PORT).evaluateAttributeExpressions().asInteger();
+        port = context.getProperty(PORT).evaluateAttributeExpressions().asInteger();
         eventsCapacity = context.getProperty(ListenerProperties.MAX_MESSAGE_QUEUE_SIZE).asInteger();
         events = new TrackingLinkedBlockingQueue<>(eventsCapacity);
         errorEvents = new LinkedBlockingQueue<>();

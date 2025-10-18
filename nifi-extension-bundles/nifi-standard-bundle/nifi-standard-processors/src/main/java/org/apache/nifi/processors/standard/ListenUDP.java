@@ -24,6 +24,7 @@ import org.apache.nifi.annotation.behavior.WritesAttribute;
 import org.apache.nifi.annotation.behavior.WritesAttributes;
 import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.Tags;
+import org.apache.nifi.components.ListenPortDefinition;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.components.ValidationContext;
 import org.apache.nifi.components.ValidationResult;
@@ -64,6 +65,15 @@ import java.util.concurrent.BlockingQueue;
 })
 public class ListenUDP extends AbstractListenEventBatchingProcessor<StandardEvent> {
 
+    public static final PropertyDescriptor PORT = new PropertyDescriptor
+        .Builder().name("Port")
+        .description("The port to listen on for UDP communication.")
+        .required(true)
+        .identifiesListenPort(ListenPortDefinition.TransportProtocol.UDP)
+        .expressionLanguageSupported(ExpressionLanguageScope.ENVIRONMENT)
+        .addValidator(StandardValidators.PORT_VALIDATOR)
+        .build();
+
     public static final PropertyDescriptor SENDING_HOST = new PropertyDescriptor.Builder()
             .name("Sending Host")
             .description("IP, or name, of a remote host. Only Datagrams from the specified Sending Host Port and this host will "
@@ -91,6 +101,11 @@ public class ListenUDP extends AbstractListenEventBatchingProcessor<StandardEven
     @Override
     protected List<PropertyDescriptor> getAdditionalProperties() {
         return ADDITIONAL_PROPERTIES;
+    }
+
+    @Override
+    protected int getConfiguredPort(ProcessContext context) {
+        return context.getProperty(PORT).evaluateAttributeExpressions().asInteger();
     }
 
     @Override
