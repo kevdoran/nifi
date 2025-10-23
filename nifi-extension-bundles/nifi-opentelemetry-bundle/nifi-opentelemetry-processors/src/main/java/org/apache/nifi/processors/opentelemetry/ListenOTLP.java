@@ -25,7 +25,6 @@ import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.Tags;
 import org.apache.nifi.annotation.lifecycle.OnScheduled;
 import org.apache.nifi.annotation.lifecycle.OnStopped;
-import org.apache.nifi.components.ListenPortDefinition.ApplicationProtocol;
 import org.apache.nifi.components.ListenPortDefinition.TransportProtocol;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.event.transport.EventServer;
@@ -87,7 +86,7 @@ public class ListenOTLP extends AbstractProcessor {
             .description("TCP port number on which to listen for OTLP Export Service Requests over HTTP and gRPC")
             .required(true)
             .defaultValue("4317")
-            .identifiesListenPort(TransportProtocol.TCP, ApplicationProtocol.HTTP_1_1, ApplicationProtocol.H2, "grpc", "otlp")
+            .identifiesListenPort(TransportProtocol.TCP, "http/1.1", "h2", "grpc", "otlp")
             .addValidator(StandardValidators.PORT_VALIDATOR)
             .expressionLanguageSupported(ExpressionLanguageScope.NONE)
             .build();

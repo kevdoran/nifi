@@ -22,7 +22,6 @@ import org.apache.nifi.annotation.lifecycle.OnDisabled;
 import org.apache.nifi.annotation.lifecycle.OnEnabled;
 import org.apache.nifi.annotation.lifecycle.OnShutdown;
 import org.apache.nifi.components.AllowableValue;
-import org.apache.nifi.components.ListenPortDefinition.ApplicationProtocol;
 import org.apache.nifi.components.ListenPortDefinition.TransportProtocol;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.components.ValidationContext;
@@ -113,7 +112,7 @@ public class JettyWebSocketServer extends AbstractJettyWebSocketService implemen
             .name("Port")
             .description("The port number on which this WebSocketServer listens to.")
             .required(true)
-            .identifiesListenPort(TransportProtocol.TCP, ApplicationProtocol.WEBSOCKET)
+            .identifiesListenPort(TransportProtocol.TCP, "ws")
             .expressionLanguageSupported(ExpressionLanguageScope.ENVIRONMENT)
             .addValidator(StandardValidators.PORT_VALIDATOR)
             .build();

@@ -90,7 +90,7 @@ public class ListenFTP extends AbstractSessionFactoryProcessor {
             .description("The Port to listen on for incoming connections. On Linux, root privileges are required to use port numbers below 1024.")
             .required(true)
             .defaultValue("2221")
-            .identifiesListenPort(ListenPortDefinition.TransportProtocol.TCP, ListenPortDefinition.ApplicationProtocol.FTP)
+            .identifiesListenPort(ListenPortDefinition.TransportProtocol.TCP, "ftp")
             .expressionLanguageSupported(ExpressionLanguageScope.ENVIRONMENT)
             .addValidator(StandardValidators.PORT_VALIDATOR)
             .build();

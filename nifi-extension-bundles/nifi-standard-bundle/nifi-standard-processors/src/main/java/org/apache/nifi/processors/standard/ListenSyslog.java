@@ -27,7 +27,6 @@ import org.apache.nifi.annotation.documentation.Tags;
 import org.apache.nifi.annotation.lifecycle.OnScheduled;
 import org.apache.nifi.annotation.lifecycle.OnStopped;
 import org.apache.nifi.components.ListenPortDefinition;
-import org.apache.nifi.components.ListenPortDefinition.ApplicationProtocol;
 import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.components.PropertyValue;
 import org.apache.nifi.components.ValidationContext;
@@ -106,7 +105,7 @@ public class ListenSyslog extends AbstractProcessor {
             "Note that Expression language is not evaluated per FlowFile.")
         .required(false)
         .addValidator(StandardValidators.PORT_VALIDATOR)
-        .identifiesListenPort(ListenPortDefinition.TransportProtocol.TCP, ApplicationProtocol.SYSLOG)
+        .identifiesListenPort(ListenPortDefinition.TransportProtocol.TCP, "syslog")
         .expressionLanguageSupported(ExpressionLanguageScope.ENVIRONMENT)
         .build();
     public static final PropertyDescriptor UDP_PORT = new PropertyDescriptor
@@ -115,7 +114,7 @@ public class ListenSyslog extends AbstractProcessor {
             "Note that Expression language is not evaluated per FlowFile.")
         .required(false)
         .addValidator(StandardValidators.PORT_VALIDATOR)
-        .identifiesListenPort(ListenPortDefinition.TransportProtocol.UDP, ApplicationProtocol.SYSLOG)
+        .identifiesListenPort(ListenPortDefinition.TransportProtocol.UDP, "syslog")
         .expressionLanguageSupported(ExpressionLanguageScope.ENVIRONMENT)
         .build();
     public static final PropertyDescriptor CHARSET = new PropertyDescriptor.Builder()
