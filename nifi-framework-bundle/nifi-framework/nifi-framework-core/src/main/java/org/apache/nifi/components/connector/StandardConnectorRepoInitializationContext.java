@@ -23,7 +23,11 @@ import org.apache.nifi.controller.NodeTypeProvider;
 import org.apache.nifi.controller.flow.FlowManager;
 import org.apache.nifi.nar.ExtensionManager;
 
+import java.util.Map;
+import java.util.Objects;
+
 public class StandardConnectorRepoInitializationContext implements ConnectorRepositoryInitializationContext {
+    private final Map<String, String> properties;
     private final FlowManager flowManager;
     private final ExtensionManager extensionManager;
     private final SecretsManager secretsManager;
@@ -32,13 +36,15 @@ public class StandardConnectorRepoInitializationContext implements ConnectorRepo
     private final ConnectorRequestReplicator requestReplicator;
     private final ConnectorConfigurationProvider connectorConfigurationProvider;
 
-    public StandardConnectorRepoInitializationContext(final FlowManager flowManager,
+    public StandardConnectorRepoInitializationContext(final Map<String, String> properties,
+                                                     final FlowManager flowManager,
                                                      final ExtensionManager extensionManager,
                                                      final SecretsManager secretsManager,
                                                      final AssetManager assetManager,
                                                      final NodeTypeProvider nodeTypeProvider,
                                                      final ConnectorRequestReplicator requestReplicator,
                                                      final ConnectorConfigurationProvider connectorConfigurationProvider) {
+        this.properties = Map.copyOf(Objects.requireNonNull(properties, "Properties is required"));
         this.flowManager = flowManager;
         this.extensionManager = extensionManager;
         this.secretsManager = secretsManager;
@@ -46,6 +52,11 @@ public class StandardConnectorRepoInitializationContext implements ConnectorRepo
         this.nodeTypeProvider = nodeTypeProvider;
         this.requestReplicator = requestReplicator;
         this.connectorConfigurationProvider = connectorConfigurationProvider;
+    }
+
+    @Override
+    public Map<String, String> getProperties() {
+        return properties;
     }
 
     @Override

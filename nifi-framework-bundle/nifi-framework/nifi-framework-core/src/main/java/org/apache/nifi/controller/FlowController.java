@@ -919,7 +919,15 @@ public class FlowController implements ReportingTaskProvider, FlowAnalysisRulePr
             extensionManager.discoverExtensions(extensionManager.getAllBundles(), additionalExtensionTypes, true);
             final ConnectorRepository created = NarThreadContextClassLoader.createInstance(extensionManager, implementationClassName, ConnectorRepository.class, properties);
 
+            final Map<String, String> initializationProperties = properties.getPropertiesWithPrefix(NiFiProperties.CONNECTOR_REPOSITORY_PREFIX)
+                .entrySet().stream()
+                .collect(Collectors.toMap(
+                    entry -> entry.getKey().substring(NiFiProperties.CONNECTOR_REPOSITORY_PREFIX.length()),
+                    Map.Entry::getValue
+                ));
+
             final ConnectorRepositoryInitializationContext initializationContext = new StandardConnectorRepoInitializationContext(
+                initializationProperties,
                 flowManager,
                 extensionManager,
                 secretsManager,
@@ -983,10 +991,10 @@ public class FlowController implements ReportingTaskProvider, FlowAnalysisRulePr
             final ConnectorConfigurationProvider created = NarThreadContextClassLoader.createInstance(
                 extensionManager, implementationClassName, ConnectorConfigurationProvider.class, properties);
 
-            final Map<String, String> initializationProperties = properties.getPropertiesWithPrefix(NiFiProperties.CONNECTOR_CONFIGURATION_PROVIDER_PROPERTIES_PREFIX)
+            final Map<String, String> initializationProperties = properties.getPropertiesWithPrefix(NiFiProperties.CONNECTOR_CONFIGURATION_PROVIDER_PREFIX)
                 .entrySet().stream()
                 .collect(Collectors.toMap(
-                    entry -> entry.getKey().substring(NiFiProperties.CONNECTOR_CONFIGURATION_PROVIDER_PROPERTIES_PREFIX.length()),
+                    entry -> entry.getKey().substring(NiFiProperties.CONNECTOR_CONFIGURATION_PROVIDER_PREFIX.length()),
                     Map.Entry::getValue
                 ));
 

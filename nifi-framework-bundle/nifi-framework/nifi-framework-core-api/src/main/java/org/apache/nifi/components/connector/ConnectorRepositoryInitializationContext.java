@@ -23,7 +23,11 @@ import org.apache.nifi.controller.NodeTypeProvider;
 import org.apache.nifi.controller.flow.FlowManager;
 import org.apache.nifi.nar.ExtensionManager;
 
+import java.util.Map;
+
 public interface ConnectorRepositoryInitializationContext {
+
+    Map<String, String> getProperties();
 
     FlowManager getFlowManager();
 
@@ -37,14 +41,6 @@ public interface ConnectorRepositoryInitializationContext {
 
     ConnectorRequestReplicator getRequestReplicator();
 
-    /**
-     * Returns the ConnectorConfigurationProvider to use for external management of connector working configuration,
-     * or null if no provider is configured.
-     *
-     * @return the ConnectorConfigurationProvider, or null if not configured
-     */
-    default ConnectorConfigurationProvider getConnectorConfigurationProvider() {
-        return null;
-    }
+    ConnectorConfigurationProvider getConnectorConfigurationProvider();
 
 }

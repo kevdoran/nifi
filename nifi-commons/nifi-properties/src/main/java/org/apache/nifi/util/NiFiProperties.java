@@ -139,12 +139,11 @@ public class NiFiProperties extends ApplicationProperties {
     public static final String STATUS_REPOSITORY_QUESTDB_PERSIST_BATCH_SIZE = "nifi.status.repository.questdb.persist.batchsize";
     public static final String STATUS_REPOSITORY_QUESTDB_PERSIST_FREQUENCY = "nifi.status.repository.questdb.persist.frequency";
 
-    // Connector Repository properties
+    // Connector Repository and Connector Configuration Provider properties
     public static final String CONNECTOR_REPOSITORY_IMPLEMENTATION = "nifi.components.connectors.repository.implementation";
-
-    // Connector Configuration Provider properties
+    public static final String CONNECTOR_REPOSITORY_PREFIX = "nifi.components.connectors.repository.properties.";
     public static final String CONNECTOR_CONFIGURATION_PROVIDER_IMPLEMENTATION = "nifi.components.connectors.configuration.provider.implementation";
-    public static final String CONNECTOR_CONFIGURATION_PROVIDER_PROPERTIES_PREFIX = "nifi.components.connectors.configuration.provider.";
+    public static final String CONNECTOR_CONFIGURATION_PROVIDER_PREFIX = "nifi.components.connectors.configuration.provider.properties.";
 
     // Secrets Manager properties
     public static final String SECRETS_MANAGER_IMPLEMENTATION = "nifi.secrets.manager.implementation";
